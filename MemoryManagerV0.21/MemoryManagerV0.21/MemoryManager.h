@@ -148,8 +148,9 @@ public:
 		printf("Start==========================================\n");
 		for (int i = 0; i < numPages; i++) {
 			if (this->aPageIndex[i].isAllocated()) {
-				printf("PageIndex%d(SizeSlot=%zu, ConsecutivePages=%d)\n", i, aPageIndex[i].getSizeSlot(), aPageIndex[i].getNumConsecutivePages());
 				this->aPageIndex[i].showStatus();
+				
+				printf("PageIndex%d(SizeSlot=%zu, ConsecutivePages=%d)\n", i, aPageIndex[i].getSizeSlot(), aPageIndex[i].getNumConsecutivePages());
 			}
 		}
 		printf("End==========================================\n");
