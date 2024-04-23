@@ -106,12 +106,20 @@ public:
 	}
 
 	void showStatus() {
+		printf("-----------------------------------------------\n");
 		for (int i = 0; i < numMaxSlots; i++) {
 			if (this->aSlotIndex[i].isAllocated()) {
 				IObject* pObject = (IObject*)(this->aSlotIndex[i].getPMemory());
-				printf("  %s::%s(%d)\n", pObject->getNameClass(), aSlotIndex[i].getNameObject(), pObject->getId());
+				printf("|  %s::%s(%d)\n", pObject->getNameClass(), aSlotIndex[i].getNameObject(), pObject->getId());
+			}
+			else {
+				printf("|  EMPTY SLOT\n");
 			}
 		}
+		if (this->numMaxSlots == -1) {
+			printf("|  EMPTY SLOT\n");
+		}
+		printf("-----------------------------------------------\n\n");
 	}
 };
 

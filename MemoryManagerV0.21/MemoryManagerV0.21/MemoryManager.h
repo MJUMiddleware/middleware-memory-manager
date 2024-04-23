@@ -147,12 +147,13 @@ public:
 	void showStatus() {
 		printf("Start==========================================\n");
 		for (int i = 0; i < numPages; i++) {
-			if (this->aPageIndex[i].isAllocated()) {
-				printf("PageIndex%d(SizeSlot=%zu, ConsecutivePages=%d)\n", i, aPageIndex[i].getSizeSlot(), aPageIndex[i].getNumConsecutivePages());
-				this->aPageIndex[i].showStatus();
+			for (int j = 0; j < aPageIndex[i].getNumConsecutivePages(); j++) {
+				printf("PageIndex%d(SizeSlot=%zu, ConsecutivePages=%d)\n", i+j, aPageIndex[i+j].getSizeSlot(), aPageIndex[i+j].getNumConsecutivePages());
 			}
+			this->aPageIndex[i].showStatus();
+			i = i + aPageIndex[i].getNumConsecutivePages() - 1;
 		}
-		printf("End==========================================\n");
+		printf("End============================================\n");
 	}
 };
 
