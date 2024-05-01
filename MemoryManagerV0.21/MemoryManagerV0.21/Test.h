@@ -14,7 +14,7 @@ public:
 	virtual ~Test() {
 	}
 	void smallSlotTest() {
-		int objectNumber = memorySpace / 48;
+		int objectNumber = memorySpace / 64;
 		printf("small Slot Test [objectNumber: %d]\n", objectNumber);
 		Camera** paCamera = new Camera * [objectNumber];
 		for (int i = 0; i < objectNumber; i++) {
