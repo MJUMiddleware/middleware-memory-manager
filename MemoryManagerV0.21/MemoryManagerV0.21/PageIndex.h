@@ -70,6 +70,9 @@ public:
 		this->setBAllocated(true);
 	}
 	void finalize() {
+		this->sizeSlot = NOT_DEFINED;
+		this->numMaxSlots = NOT_DEFINED;
+		this->numSlotsAvailable = NOT_DEFINED;
 		this->setBAllocated(false);
 	}
 

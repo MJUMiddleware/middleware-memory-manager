@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Camera64.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="IMemoryManager.h" />
     <ClInclude Include="IObject.h" />
@@ -139,10 +140,12 @@
     <ClInclude Include="string.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PageIndex.h" />
+    <ClInclude Include="Test.h" />
     <ClInclude Include="Type.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Camera64.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="IMemeoryManager.cpp" />
     <ClCompile Include="IObject.cpp" />
@@ -154,6 +157,7 @@
     <ClCompile Include="PageIndex.cpp" />
     <ClCompile Include="Recorder.cpp" />
     <ClCompile Include="SlotIndex.cpp" />
+    <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
