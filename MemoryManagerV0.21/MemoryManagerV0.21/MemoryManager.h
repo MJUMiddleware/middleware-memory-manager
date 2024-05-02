@@ -77,7 +77,7 @@ public:
 		for (int i = 0; i < numPages; i++) {
 			aPageIndex[i].setPPage(pBufferCurrent);
 			aPageIndex[i].setSizePage(sizePage);
-			aPageIndex[i].setNumConsecutivePages(numPages-i);
+			aPageIndex[i].setNumConsecutivePages(numPages - i);
 			pBufferCurrent = pBufferCurrent + sizePage;
 		}
 	}
@@ -85,7 +85,7 @@ public:
 	}
 
 
-	void* allocate(size_t sizeMemory, const char *pName) {
+	void* allocate(size_t sizeMemory, const char* pName) {
 		// multiple x
 		size_t sizeSlot = normalizeSize(sizeMemory);
 
@@ -118,7 +118,8 @@ public:
 			if (pPageIndexFound == nullptr) {
 				// out of memory
 				throw Exception(Exception::ECode::eOutOfMemory, "allocateNewPages2");
-			} else {
+			}
+			else {
 				pSlotAllocated = pPageIndexFound->allocate(sizeSlot, pName);
 			}
 		}
@@ -127,7 +128,7 @@ public:
 
 	void dellocate(void* pObject) {
 		size_t offset = (size_t)pObject - (size_t)(this->pBuffer);
-		int pageIndex = (int)(offset/sizePage);
+		int pageIndex = (int)(offset / sizePage);
 		bool isEmpty = this->aPageIndex[pageIndex].dellocate(pObject);
 		if (isEmpty) {
 			for (int i = 0; i < this->aPageIndex[pageIndex].getNumConsecutivePages(); i++) {
@@ -149,13 +150,12 @@ public:
 	void showStatus() {
 		printf("Start==========================================\n");
 		for (int i = 0; i < numPages; i++) {
-			if (this->aPageIndex[i].isAllocated()) {
-				this->aPageIndex[i].showStatus();
-				
-				printf("PageIndex%d(SizeSlot=%zu, ConsecutivePages=%d)\n", i, aPageIndex[i].getSizeSlot(), aPageIndex[i].getNumConsecutivePages());
+			for (int j = 0; j < aPageIndex[i].getNumConsecutivePages(); j++) {
+				printf("PageIndex%d(SizeSlot=%d, ConsecutivePages=%d)\n", i + j, (int)aPageIndex[i + j].getSizeSlot(), aPageIndex[i + j].getNumConsecutivePages());
 			}
+			this->aPageIndex[i].showStatus();
+			i = i + aPageIndex[i].getNumConsecutivePages() - 1;
 		}
-		printf("End==========================================\n");
+		printf("End============================================\n");
 	}
 };
-

@@ -39,9 +39,9 @@ public:
 	void setBAllocated(bool bAllocated) { this->bAllocated = bAllocated; }
 
 	size_t getSizeSlot() { return this->sizeSlot; }
-//	void setSizeSlot(size_t sizeSlot) { this->sizeSlot = sizeSlot; }
+	//	void setSizeSlot(size_t sizeSlot) { this->sizeSlot = sizeSlot; }
 
-	// constructors
+		// constructors
 	PageIndex() :
 		id(s_countId++),
 		pPage(nullptr),
@@ -59,7 +59,7 @@ public:
 
 	void initialize(size_t sizeSlot) {
 		this->sizeSlot = sizeSlot;
-		this->numMaxSlots = (int) (sizePage<sizeSlot ? 1 : sizePage/sizeSlot);
+		this->numMaxSlots = (int)(sizePage < sizeSlot ? 1 : sizePage / sizeSlot);
 		this->numSlotsAvailable = numMaxSlots;
 		this->aSlotIndex = new SlotIndex[numMaxSlots];
 		char* pCurrent = this->pPage;
@@ -70,14 +70,11 @@ public:
 		this->setBAllocated(true);
 	}
 	void finalize() {
-		this->sizeSlot = NOT_DEFINED;
-		this->numMaxSlots = NOT_DEFINED;
-		this->numSlotsAvailable = NOT_DEFINED;
 		this->setBAllocated(false);
 	}
 
 	// methods
-	void* allocate(size_t size, const char *pNameObject) {
+	void* allocate(size_t size, const char* pNameObject) {
 		void* pMemoryAllocated = nullptr;
 		for (int i = 0; i < this->numMaxSlots; i++) {
 			if (!this->aSlotIndex[i].isAllocated()) {
@@ -95,7 +92,7 @@ public:
 		int indexSlot = (int)(offset / sizeSlot);
 		this->aSlotIndex[indexSlot].setBAllocated(false);
 		this->numSlotsAvailable++;
-		bool isEmpty =  false;
+		bool isEmpty = false;
 		if (this->numSlotsAvailable == this->numMaxSlots) {
 			isEmpty = true;
 		}
@@ -109,12 +106,19 @@ public:
 	}
 
 	void showStatus() {
+		printf("-----------------------------------------------\n");
 		for (int i = 0; i < numMaxSlots; i++) {
 			if (this->aSlotIndex[i].isAllocated()) {
 				IObject* pObject = (IObject*)(this->aSlotIndex[i].getPMemory());
-				printf("  %s::%s(%d)\n", pObject->getNameClass(), aSlotIndex[i].getNameObject(), pObject->getId());
+				printf("|  %s::%s(%d)\n", pObject->getNameClass(), aSlotIndex[i].getNameObject(), pObject->getId());
+			}
+			else {
+				printf("|  EMPTY SLOT\n");
 			}
 		}
+		if (this->numMaxSlots == -1) {
+			printf("|  EMPTY SLOT\n");
+		}
+		printf("-----------------------------------------------\n\n");
 	}
 };
-
