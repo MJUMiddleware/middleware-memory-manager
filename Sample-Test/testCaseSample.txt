@@ -1,0 +1,26 @@
+// memory = page = object
+1024 1024 1024
+// memory = page > object -> page/2 < object
+1024 1024 1000
+// memory = page > object -> page/2 = object
+1024 1024 512
+// memory = page > object -> page/2 > object
+1024 1024 300
+// memory = page < object
+1024 1024 1048
+// memory > page = object
+1024 512 512
+// memory > page > object -> page/2 = object
+1024 512 256
+// memory > page > object -> page/2 > object
+1024 512 240
+// memory > page > object -> page/2 < object
+1024 512 260
+// memory > page < object -> object < memory
+1024 512 712
+// memory < page = object
+1024 2048 2048
+// memory < page < object
+1024 2048 2512
+// memory < page > object
+1024 2048 1256
