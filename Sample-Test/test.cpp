@@ -79,7 +79,6 @@ TEST(MemoryManagerTest, PageSizeLargerThenAllocatedMemory2) {
 TEST(MemoryManagerTest, PageSizeLargerThenAllocatedMemory3) {
 	//memory < page = slot > object
 	//exception
-	// 잘못된 거 아님?
 	char* pBuffer = new char[SIZE_MEMORY];
 	Object::s_pMemoryManager = new MemoryManager(pBuffer, sizeof(char) * SIZE_MEMORY, SIZE_MEMORY);
 	EXPECT_THROW(new(2 * SIZE_MEMORY - 1, "1") TestObject(); , Exception);
@@ -89,17 +88,50 @@ TEST(MemoryManagerTest, PageSizeLargerThenAllocatedMemory3) {
 void makeTestCase(string caseName, int memorySize, int pageSize, int objectSize) {
 	//cout << caseName << endl;
 	//cout << "memorySize: " << memorySize << ", pageSize: " << pageSize << ", objectSize: " << objectSize << endl;
-	
-	cout <<"[--------" + caseName  + "--------]" << endl;
-	char* pBuffer = new char[memorySize];
-	Object::s_pMemoryManager = new MemoryManager(pBuffer, sizeof(char) * SIZE_MEMORY, pageSize);
 
+	cout << "[--------" + caseName + "--------]" << endl;
+	if(Object::s_pMemoryManager!=nullptr){
+		delete Object::s_pMemoryManager;
+		Object::s_pMemoryManager = nullptr;
+	}
+	char* pBuffer = new char[memorySize];
+	Object::s_pMemoryManager = new MemoryManager(pBuffer, sizeof(char) * memorySize, pageSize);
 	if (memorySize < objectSize || (memorySize < pageSize)) {
-		EXPECT_THROW(new(objectSize, "1") TestObject();, Exception);
+		EXPECT_THROW(new(objectSize, "1") TestObject(); , Exception);
 	}
 	else {
-		TestObject* object = new(objectSize, "1") TestObject();
-		EXPECT_EQ(object->getSizeSlot(), normalizeSize(objectSize));
+		printf("memorySize = %d\n", memorySize);
+		printf("pageSize = %d\n", pageSize);
+		printf("ObjectSize = %d\n", normalizeSize(objectSize));
+
+		int numSlots = pageSize / normalizeSize(objectSize);
+		int numPages = memorySize / pageSize;
+		if (objectSize > pageSize) {
+			int numberOfPages = (normalizeSize(objectSize) + pageSize - 1) / pageSize;
+			int sizeSlot = numberOfPages * pageSize;
+			numSlots = memorySize / sizeSlot;
+		}
+		else {
+			numSlots = numSlots * numPages;
+		}
+		printf("numSlot = %d\n", numSlots);
+
+		TestObject** testObject = new TestObject * [numSlots];
+
+		for (int i = 0; i < numSlots; i++) {
+			testObject[i] = new(objectSize, to_pchar(i)) TestObject();
+			EXPECT_EQ(testObject[i]->getSizeSlot(), normalizeSize(objectSize));
+		}
+
+		for (int i = 0; i < numSlots; i++) {
+			Object::s_pMemoryManager->dellocate(testObject[i]);
+		}
+
+		for (int i = 0; i < numSlots; i++) {
+			testObject[i] = new(objectSize, to_pchar(i)) TestObject();
+			EXPECT_EQ(testObject[i]->getSizeSlot(), normalizeSize(objectSize));
+		}
+		EXPECT_THROW(new(objectSize, "last") TestObject();, Exception);
 	}
 }
 TEST(MemoryManagerTest, AllCaseTest) {
@@ -114,7 +146,6 @@ TEST(MemoryManagerTest, AllCaseTest) {
 			stringstream ss(line);
 			string token;
 			vector<string> tokens;
-			
 			while (ss >> token) {
 				tokens.push_back(token);
 			}

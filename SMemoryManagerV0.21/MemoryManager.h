@@ -203,7 +203,7 @@ public:
 			}
 		}
 		int numConsecutivePages = 1;
-		for (int i = startConsecutivePages; i >= 0 || this->aPageIndex[pageIndex].isAllocated(); i--) {
+		for (int i = startConsecutivePages; i >= 0 && !this->aPageIndex[i].isAllocated(); i--) {
 			this->aPageIndex[i].setNumConsecutivePages(numConsecutivePages);
 			numConsecutivePages++;
 		}
