@@ -79,7 +79,6 @@ TEST(MemoryManagerTest, PageSizeLargerThenAllocatedMemory2) {
 TEST(MemoryManagerTest, PageSizeLargerThenAllocatedMemory3) {
 	//memory < page = slot > object
 	//exception
-	// 잘못된 거 아님?
 	char* pBuffer = new char[SIZE_MEMORY];
 	Object::s_pMemoryManager = new MemoryManager(pBuffer, sizeof(char) * SIZE_MEMORY, SIZE_MEMORY);
 	EXPECT_THROW(new(2 * SIZE_MEMORY - 1, "1") TestObject(); , Exception);
@@ -133,8 +132,6 @@ void makeTestCase(string caseName, int memorySize, int pageSize, int objectSize)
 			EXPECT_EQ(testObject[i]->getSizeSlot(), normalizeSize(objectSize));
 		}
 		EXPECT_THROW(new(objectSize, "last") TestObject();, Exception);
-
-
 	}
 }
 TEST(MemoryManagerTest, AllCaseTest) {
@@ -149,7 +146,6 @@ TEST(MemoryManagerTest, AllCaseTest) {
 			stringstream ss(line);
 			string token;
 			vector<string> tokens;
-
 			while (ss >> token) {
 				tokens.push_back(token);
 			}
